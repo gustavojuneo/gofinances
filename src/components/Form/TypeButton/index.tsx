@@ -1,14 +1,14 @@
 import React from 'react';
-import { TouchableOpacityProps } from 'react-native';
+import { RectButtonProps } from 'react-native-gesture-handler';
 
-import { Container, Icon, Title } from './styles';
+import { Container, Button, Icon, Title } from './styles';
 
 const icons = {
   up: 'arrow-up-circle',
   down: 'arrow-down-circle',
 };
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends RectButtonProps {
   type: 'up' | 'down';
   title: string;
   isSelected: boolean;
@@ -16,9 +16,11 @@ interface ButtonProps extends TouchableOpacityProps {
 
 export function TypeButton({ type, title, isSelected, ...rest }: ButtonProps) {
   return (
-    <Container {...rest} type={type} isSelected={isSelected}>
-      <Icon type={type} name={icons[type]} />
-      <Title>{title}</Title>
+    <Container type={type} isSelected={isSelected}>
+      <Button {...rest}>
+        <Icon type={type} name={icons[type]} />
+        <Title>{title}</Title>
+      </Button>
     </Container>
   );
 }
