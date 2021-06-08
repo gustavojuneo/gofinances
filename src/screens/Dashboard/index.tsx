@@ -28,6 +28,7 @@ import {
   LoadContainer,
 } from './styles';
 import { getLastTransactionDate } from '../../utils/getLastTransactionDate';
+import { useAuth } from '../../contexts/hooks/useAuth';
 
 export interface TransactionListProps extends TransactionProps {
   id: string;
@@ -46,6 +47,7 @@ interface HighlightData {
 
 export function Dashboard() {
   const theme = useTheme();
+  const { user, signOut } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [transactions, setTransactions] = useState<TransactionListProps[]>([]);
   const [highlightData, setHighlightData] = useState<HighlightData>(
@@ -53,7 +55,7 @@ export function Dashboard() {
   );
 
   async function loadTransactions() {
-    const dataKey = '@gofinances:transactions';
+    const dataKey = `@gofinances:transactions_user:${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
     const data = response ? JSON.parse(response) : [];
 
@@ -96,7 +98,10 @@ export function Dashboard() {
       transactions,
       'negative',
     );
-    const totalInterval = `01 a ${lastTransactionExpensives}`;
+    const totalInterval =
+      lastTransactionExpensives === 0
+        ? 'Não há transações'
+        : `01 a ${lastTransactionExpensives}`;
 
     setTransactions(formattedData);
     setHighlightData({
@@ -105,14 +110,20 @@ export function Dashboard() {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
+        lastTransaction:
+          lastTransactionEntries === 0
+            ? 'Não há transações'
+            : `Última entrada dia ${lastTransactionEntries}`,
       },
       expensives: {
         amount: expensiveTotal.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: `Última saída dia ${lastTransactionExpensives}`,
+        lastTransaction:
+          lastTransactionExpensives === 0
+            ? 'Não há transações'
+            : `Última saída dia ${lastTransactionExpensives}`,
       },
       total: {
         amount: total.toLocaleString('pt-BR', {
@@ -142,16 +153,14 @@ export function Dashboard() {
           <Header>
             <UserWrapper>
               <UserInfo>
-                <Photo
-                  source={{ uri: 'https://github.com/gustavojuneo.png' }}
-                />
+                <Photo source={{ uri: user.photo }} />
                 <User>
                   <UserGretting>Olá, </UserGretting>
-                  <UserName>Gustavo</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
 
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power" />
               </LogoutButton>
             </UserWrapper>

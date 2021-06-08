@@ -4,17 +4,25 @@ export function getLastTransactionDate(
   collection: TransactionListProps[],
   type: 'positive' | 'negative',
 ) {
+  const collectionFiltered = collection.filter(
+    transaction => transaction.type === type,
+  );
+
+  if (collectionFiltered.length === 0) {
+    return 0;
+  }
+
   const lastTransaction = new Date(
     Math.max.apply(
       Math,
-      collection
-        .filter(transaction => transaction.type === type)
-        .map(transaction => new Date(transaction.date).getTime()),
+      collectionFiltered.map(transaction =>
+        new Date(transaction.date).getTime(),
+      ),
     ),
   );
 
-  return lastTransaction.toLocaleString('pt-BR', {
-    day: '2-digit',
-    month: 'long',
-  });
+  return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString(
+    'pt-BR',
+    { month: 'long' },
+  )}`;
 }

@@ -27,6 +27,7 @@ export const Title = styled.Text`
 
 export const Content = styled.View`
   flex: 1;
+  padding: 0 24px;
 `;
 
 export const MonthSelect = styled.View`
