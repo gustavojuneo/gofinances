@@ -17,11 +17,12 @@ import {
   Header,
   Title,
   Content,
-  ChartContainer,
   MonthSelect,
   MonthSelectButton,
   MonthSelectIcon,
   Month,
+  ChartContainer,
+  History,
   LoadContainer,
 } from './styles';
 
@@ -45,14 +46,13 @@ interface CategoryData {
 
 export function Resume() {
   const theme = useTheme();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
     [],
   );
 
   function handleDateChange(action: 'next' | 'prev') {
-    setIsLoading(true);
     if (action === 'next') {
       setSelectedDate(addMonths(selectedDate, 1));
     } else {
@@ -61,6 +61,7 @@ export function Resume() {
   }
 
   async function loadData() {
+    setIsLoading(true);
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
     const data = response ? JSON.parse(response) : [];
@@ -122,14 +123,7 @@ export function Resume() {
         <Title>Resumo por categoria</Title>
       </Header>
 
-      <Content
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 24,
-          paddingBottom: useBottomTabBarHeight(),
-          flex: 1,
-        }}
-      >
+      <Content>
         <MonthSelect>
           <MonthSelectButton onPress={() => handleDateChange('prev')}>
             <MonthSelectIcon name="chevron-left" />
@@ -154,7 +148,7 @@ export function Resume() {
                 colorScale={totalByCategories.map(category => category.color)}
                 style={{
                   labels: {
-                    fontSize: RFValue(18),
+                    fontSize: RFValue(14),
                     fontWeight: 'bold',
                     fill: theme.colors.shape,
                   },
@@ -165,14 +159,22 @@ export function Resume() {
               />
             </ChartContainer>
 
-            {totalByCategories.map(item => (
-              <HistoryCard
-                key={item.key}
-                title={item.name}
-                amount={item.totalFormatted}
-                color={item.color}
-              />
-            ))}
+            <History
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingHorizontal: 24,
+                paddingBottom: useBottomTabBarHeight(),
+              }}
+            >
+              {totalByCategories.map(item => (
+                <HistoryCard
+                  key={item.key}
+                  title={item.name}
+                  amount={item.totalFormatted}
+                  color={item.color}
+                />
+              ))}
+            </History>
           </>
         )}
       </Content>
