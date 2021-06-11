@@ -37,7 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         iosClientId:
           '856351924448-n7mkapedahr1ta0i9nja79m1ofbqcntl.apps.googleusercontent.com',
         androidClientId:
-          '856351924448-5kqttrddmeldvto5msdpgnv5av4pv1cg.apps.googleusercontent.com',
+          '856351924448-a2fs8vdfqidvf8krd9utddoa140g57of.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
       });
 
