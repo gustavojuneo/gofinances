@@ -1,14 +1,14 @@
-import React, { useCallback, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from 'styled-components';
+import React, { useCallback, useState } from 'react'
+import { ActivityIndicator } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useFocusEffect } from '@react-navigation/native'
+import { useTheme } from 'styled-components'
 
-import { HighlightCard } from '../../components/HighlightCard';
+import { HighlightCard } from '../../components/HighlightCard'
 import {
   TransactionCard,
   TransactionProps,
-} from '../../components/TransactionCard';
+} from '../../components/TransactionCard'
 
 import {
   Container,
@@ -26,84 +26,84 @@ import {
   TransactionList,
   LogoutButton,
   LoadContainer,
-} from './styles';
-import { getLastTransactionDate } from '../../utils/getLastTransactionDate';
-import { useAuth } from '../../contexts/hooks/useAuth';
+} from './styles'
+import { getLastTransactionDate } from '../../utils/getLastTransactionDate'
+import { useAuth } from '../../hooks/useAuth'
 
 export interface TransactionListProps extends TransactionProps {
-  id: string;
+  id: string
 }
 
 interface HighlightDataProps {
-  amount: string;
-  lastTransaction: string;
+  amount: string
+  lastTransaction: string
 }
 
 interface HighlightData {
-  entries: HighlightDataProps;
-  expensives: HighlightDataProps;
-  total: HighlightDataProps;
+  entries: HighlightDataProps
+  expensives: HighlightDataProps
+  total: HighlightDataProps
 }
 
 export function Dashboard() {
-  const theme = useTheme();
-  const { user, signOut } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const [transactions, setTransactions] = useState<TransactionListProps[]>([]);
+  const theme = useTheme()
+  const { user, signOut } = useAuth()
+  const [isLoading, setIsLoading] = useState(true)
+  const [transactions, setTransactions] = useState<TransactionListProps[]>([])
   const [highlightData, setHighlightData] = useState<HighlightData>(
     {} as HighlightData,
-  );
+  )
 
   async function loadTransactions() {
-    const dataKey = `@gofinances:transactions_user:${user.id}`;
-    const response = await AsyncStorage.getItem(dataKey);
-    const data = response ? JSON.parse(response) : [];
+    const dataKey = `@gofinances:transactions_user:${user.id}`
+    const response = await AsyncStorage.getItem(dataKey)
+    const data = response ? JSON.parse(response) : []
 
-    let entriesTotal = 0;
-    let expensiveTotal = 0;
+    let entriesTotal = 0
+    let expensiveTotal = 0
 
     const formattedData: TransactionListProps[] = data.map(
       (item: TransactionListProps) => {
         if (item.type === 'positive') {
-          entriesTotal += Number(item.amount);
+          entriesTotal += Number(item.amount)
         } else {
-          expensiveTotal += Number(item.amount);
+          expensiveTotal += Number(item.amount)
         }
 
         const amount = Number(item.amount).toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
-        });
+        })
         const date = Intl.DateTimeFormat('pt-BR', {
           day: '2-digit',
           month: '2-digit',
           year: '2-digit',
-        }).format(new Date(item.date));
+        }).format(new Date(item.date))
 
         return {
           ...item,
           amount,
           date,
-        };
+        }
       },
-    );
+    )
 
-    const total = entriesTotal - expensiveTotal;
+    const total = entriesTotal - expensiveTotal
 
     const lastTransactionEntries = getLastTransactionDate(
       transactions,
       'positive',
-    );
+    )
     const lastTransactionExpensives = getLastTransactionDate(
       transactions,
       'negative',
-    );
+    )
     const totalInterval =
       lastTransactionExpensives === 0
         ? 'Não há transações'
-        : `01 a ${lastTransactionExpensives}`;
+        : `01 a ${lastTransactionExpensives}`
 
-    setTransactions(formattedData);
+    setTransactions(formattedData)
     setHighlightData({
       entries: {
         amount: entriesTotal.toLocaleString('pt-BR', {
@@ -132,15 +132,15 @@ export function Dashboard() {
         }),
         lastTransaction: totalInterval,
       },
-    });
-    setIsLoading(false);
+    })
+    setIsLoading(false)
   }
 
   useFocusEffect(
     useCallback(() => {
-      loadTransactions();
+      loadTransactions()
     }, []),
-  );
+  )
 
   return (
     <Container>
@@ -199,5 +199,5 @@ export function Dashboard() {
         </>
       )}
     </Container>
-  );
+  )
 }

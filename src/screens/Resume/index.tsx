@@ -1,18 +1,18 @@
-import React, { useCallback, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { VictoryPie } from 'victory-native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { addMonths, subMonths, format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import React, { useCallback, useState } from 'react'
+import { ActivityIndicator } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { VictoryPie } from 'victory-native'
+import { RFValue } from 'react-native-responsive-fontsize'
+import { addMonths, subMonths, format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
-import { useTheme } from 'styled-components';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useAuth } from '../../contexts/hooks/useAuth';
+import { useTheme } from 'styled-components'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
+import { useAuth } from '../../hooks/useAuth'
 
-import { HistoryCard } from '../../components/HistoryCard';
-import { categories } from '../../utils/categories';
+import { HistoryCard } from '../../components/HistoryCard'
+import { categories } from '../../utils/categories'
 
 import {
   Container,
@@ -26,78 +26,76 @@ import {
   ChartContainer,
   History,
   LoadContainer,
-} from './styles';
+} from './styles'
 
 interface TransactionData {
-  type: 'positive' | 'negative';
-  name: string;
-  amount: string;
-  category: string;
-  date: string;
+  type: 'positive' | 'negative'
+  name: string
+  amount: string
+  category: string
+  date: string
 }
 
 interface CategoryData {
-  key: string;
-  name: string;
-  total: number;
-  totalFormatted: string;
-  color: string;
-  percent: number;
-  percentFormatted: string;
+  key: string
+  name: string
+  total: number
+  totalFormatted: string
+  color: string
+  percent: number
+  percentFormatted: string
 }
 
 export function Resume() {
-  const theme = useTheme();
-  const { user } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
-    [],
-  );
+  const theme = useTheme()
+  const { user } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([])
 
   function handleDateChange(action: 'next' | 'prev') {
     if (action === 'next') {
-      setSelectedDate(addMonths(selectedDate, 1));
+      setSelectedDate(addMonths(selectedDate, 1))
     } else {
-      setSelectedDate(subMonths(selectedDate, 1));
+      setSelectedDate(subMonths(selectedDate, 1))
     }
   }
 
   async function loadData() {
-    setIsLoading(true);
-    const dataKey = `@gofinances:transactions_user:${user.id}`;
-    const response = await AsyncStorage.getItem(dataKey);
-    const data = response ? JSON.parse(response) : [];
+    setIsLoading(true)
+    const dataKey = `@gofinances:transactions_user:${user.id}`
+    const response = await AsyncStorage.getItem(dataKey)
+    const data = response ? JSON.parse(response) : []
     const expensives = data.filter(
       (expensive: TransactionData) =>
         expensive.type === 'negative' &&
         new Date(expensive.date).getMonth() === selectedDate.getMonth() &&
         new Date(expensive.date).getFullYear() === selectedDate.getFullYear(),
-    );
+    )
     const expensivesTotal = expensives.reduce(
       (acc: number, expensive: TransactionData) => {
-        return acc + Number(expensive.amount);
+        return acc + Number(expensive.amount)
       },
       0,
-    );
-    const totalByCategory: CategoryData[] = [];
+    )
+    const totalByCategory: CategoryData[] = []
 
     categories.forEach(category => {
-      let categorySum = 0;
+      let categorySum = 0
 
       expensives.forEach((expensive: TransactionData) => {
         if (expensive.category === category.key) {
-          categorySum += Number(expensive.amount);
+          categorySum += Number(expensive.amount)
         }
-      });
+      })
 
       if (categorySum > 0) {
         const totalFormatted = categorySum.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
-        });
-        const percent = (categorySum / expensivesTotal) * 100;
-        const percentFormatted = `${percent.toFixed(0)}%`;
+        })
+        const percent = (categorySum / expensivesTotal) * 100
+        const percentFormatted = `${percent.toFixed(0)}%`
 
         totalByCategory.push({
           key: category.key,
@@ -107,18 +105,18 @@ export function Resume() {
           totalFormatted,
           percent,
           percentFormatted,
-        });
+        })
       }
-    });
-    setTotalByCategories(totalByCategory);
-    setIsLoading(false);
+    })
+    setTotalByCategories(totalByCategory)
+    setIsLoading(false)
   }
 
   useFocusEffect(
     useCallback(() => {
-      loadData();
+      loadData()
     }, [selectedDate]),
-  );
+  )
 
   return (
     <Container>
@@ -182,5 +180,5 @@ export function Resume() {
         )}
       </Content>
     </Container>
-  );
+  )
 }

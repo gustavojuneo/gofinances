@@ -1,36 +1,36 @@
-import 'react-native-gesture-handler';
-import 'intl';
-import 'intl/locale-data/jsonp/pt-BR';
+import 'react-native-gesture-handler'
+import 'intl'
+import 'intl/locale-data/jsonp/pt-BR'
 
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import AppLoading from 'expo-app-loading';
-import { ThemeProvider } from 'styled-components';
+import React from 'react'
+import { StatusBar } from 'expo-status-bar'
+import AppLoading from 'expo-app-loading'
+import { ThemeProvider } from 'styled-components'
 
 import {
   useFonts,
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_700Bold,
-} from '@expo-google-fonts/poppins';
+} from '@expo-google-fonts/poppins'
 
-import theme from './src/global/styles/theme';
+import theme from './src/global/styles/theme'
 
-import { AuthProvider } from './src/contexts/AuthContext';
-import { useAuth } from './src/contexts/hooks/useAuth';
-import { Routes } from './src/routes';
+import { AuthProvider } from './src/contexts/AuthContext'
+import { useAuth } from './src/hooks/useAuth'
+import { Routes } from './src/routes'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
     Poppins_700Bold,
-  });
+  })
 
-  const { userStorageLoading } = useAuth();
+  const { userStorageLoading } = useAuth()
 
   if (!fontsLoaded || userStorageLoading) {
-    return <AppLoading />;
+    return <AppLoading />
   }
 
   return (
@@ -40,5 +40,5 @@ export default function App() {
         <Routes />
       </AuthProvider>
     </ThemeProvider>
-  );
+  )
 }

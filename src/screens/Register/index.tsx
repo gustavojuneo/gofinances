@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../../contexts/hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 import { InputForm } from '../../components/Form/InputForm';
 import { Button } from '../../components/Form/Button';

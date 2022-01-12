@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Platform } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { useAuth } from '../../contexts/hooks/useAuth';
-import { useTheme } from 'styled-components';
+import React, { useState } from 'react'
+import { ActivityIndicator, Alert, Platform } from 'react-native'
+import { RFValue } from 'react-native-responsive-fontsize'
+import { useAuth } from '../../hooks/useAuth'
+import { useTheme } from 'styled-components'
 
-import AppleSvg from '../../assets/apple.svg';
-import GoogleSvg from '../../assets/google.svg';
-import LogoSvg from '../../assets/logo.svg';
+import AppleSvg from '../../assets/apple.svg'
+import GoogleSvg from '../../assets/google.svg'
+import LogoSvg from '../../assets/logo.svg'
 
-import { SignInSocialButton } from '../../components/SignInSocialButton';
+import { SignInSocialButton } from '../../components/SignInSocialButton'
 
 import {
   Container,
@@ -18,32 +18,32 @@ import {
   SignInTitle,
   Footer,
   FooterWrapper,
-} from './styles';
+} from './styles'
 
 export function SignIn() {
-  const theme = useTheme();
-  const { signInWithGoogle, signInWithApple } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const theme = useTheme()
+  const { signInWithGoogle, signInWithApple } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
 
   async function handleSignInWithGoogle() {
     try {
-      setIsLoading(true);
-      return await signInWithGoogle();
+      setIsLoading(true)
+      return await signInWithGoogle()
     } catch (err) {
-      console.log(err);
-      Alert.alert('Não foi possível conectar com a conta Google');
-      setIsLoading(false);
+      console.log(err)
+      Alert.alert('Não foi possível conectar com a conta Google')
+      setIsLoading(false)
     }
   }
 
   async function handleSignInWithApple() {
     try {
-      setIsLoading(true);
-      return await signInWithApple();
+      setIsLoading(true)
+      return await signInWithApple()
     } catch (err) {
-      console.log(err);
-      Alert.alert('Não foi possível conectar com a conta Apple');
-      setIsLoading(false);
+      console.log(err)
+      Alert.alert('Não foi possível conectar com a conta Apple')
+      setIsLoading(false)
     }
   }
 
@@ -87,5 +87,5 @@ export function SignIn() {
         )}
       </Footer>
     </Container>
-  );
+  )
 }
