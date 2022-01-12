@@ -1,18 +1,21 @@
-import React from 'react';
-import { TouchableOpacityProps } from 'react-native';
+import React from 'react'
+import { RectButtonProps } from 'react-native-gesture-handler'
 
-import { Container, Category, Icon } from './styles';
+import { Container, Category, Icon } from './styles'
 
-interface CategorySelectProps {
-  title: string;
-  onPress: () => void;
+interface CategorySelectProps extends RectButtonProps {
+  title: string
 }
 
-export function CategorySelectButton({ title, onPress }: CategorySelectProps) {
+export function CategorySelectButton({
+  title,
+  onPress,
+  testID,
+}: CategorySelectProps) {
   return (
-    <Container onPress={onPress}>
+    <Container testID={testID} onPress={onPress}>
       <Category>{title}</Category>
       <Icon name="chevron-down" />
     </Container>
-  );
+  )
 }

@@ -133,6 +133,7 @@ export function Register() {
               />
             </TransactionTypes>
             <CategorySelectButton
+              testID="button-category"
               title={category.name}
               onPress={() => setCategoryModalOpen(true)}
             />
