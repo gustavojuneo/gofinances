@@ -1,5 +1,9 @@
 {
   "extends": "expo/tsconfig.base",
+  "exclude": [
+    "tsconfig.json",
+    "node_modules"
+  ],
   "compilerOptions": {
     "strict": true
   }
